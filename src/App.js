@@ -1,25 +1,35 @@
-import logo from './logo.svg';
-import './App.css';
+// App.js
+import React, { useState } from 'react';
+import Navbar from './Components/Navbar';
+import Form from './Components/Form';
+import Modal from './Components/Modal';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
+  const [notes, setNotes] = useState(getNotesFromLs);
+  const [editid, setEditid] = useState(null);
+
+  function getNotesFromLs() {
+    const notes = JSON.parse(localStorage.getItem('notes'));
+    return notes ? notes : [];
+  }
+
+  // Update local storage whenever notes change
+  React.useEffect(() => {
+    localStorage.setItem('notes', JSON.stringify(notes));
+  }, [notes]);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Navbar />
+      <div className="container my-3">
+        <Form notes={notes} setNotes={setNotes} setEditid={setEditid} />
+        <Modal editid={editid} notes={notes} setNotes={setNotes} />
+      </div>
     </div>
   );
 }
 
 export default App;
+
+
